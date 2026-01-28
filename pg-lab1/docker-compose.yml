@@ -5,6 +5,7 @@ services:
     image: postgres:18.1
     container_name: pg_lab_postgres
     restart: unless-stopped
+    shm_size: "1gb"   #  256m, 512m o 1gb, por defecto 64mb puede ser corto para algunas operaciones
 
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
