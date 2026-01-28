@@ -2,8 +2,8 @@
 
 ## Orden recomendado
 1. `01_schema.sql` -> crea tablas (sin índices secundarios)
-2. `02_seed_small.sql` -> datos pequeños (rápido) + ANALYZE
-3. ejecuta `03_seed_big.sql` en vez del small para probar con millones de registros
+2. `02_generate_small.sql` -> datos pequeños (rápido) + ANALYZE
+3. `03_generate_big.sql` en vez del small para probar con millones de registros
 4. `04_queries.sql` -> consultas base con EXPLAIN ANALYZE
 5. `05_optimizations.sql` -> aplica optimizaciones incrementalmente y vuelve a ejecutar `04_queries.sql`
 
