@@ -16,6 +16,16 @@ ANALYZE;
 -- 2) Índice por rango temporal (consulta Q1)
 CREATE INDEX IF NOT EXISTS idx_orders_order_date ON orders(order_date);
 
+-- o pruebe esta alternativa:
+
+CREATE INDEX IF NOT EXISTS idx_orders_order_date_customer ON orders (order_date, customer_id)
+INCLUDE (total_amount);
+
+-- o
+
+CREATE INDEX IF NOT EXISTS idx_orders_order_date_customer ON orders (order_date)
+INCLUDE (total_amount);
+
 ANALYZE;
 
 -- 3) Índice compuesto para dashboard (Q3): filtro por customer + orden por fecha
