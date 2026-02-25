@@ -1,0 +1,40 @@
+services:
+  pg_coordinator:
+    image: postgres:18
+    container_name: pg_coordinator
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: coorddb
+    ports:
+      - "5432:5432"
+    networks:
+      - pgnet
+
+  pg_madrid:
+    image: postgres:18
+    container_name: pg_madrid
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: nodedb
+    ports:
+      - "5433:5432"
+    networks:
+      - pgnet
+
+  pg_barcelona:
+    image: postgres:18
+    container_name: pg_barcelona
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: nodedb
+    ports:
+      - "5434:5432"
+    networks:
+      - pgnet
+
+networks:
+  pgnet:
+    driver: bridge
