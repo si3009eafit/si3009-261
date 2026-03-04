@@ -50,8 +50,8 @@ services:
       - ./replica/conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
 
       # Script de arranque (hace basebackup si el data dir está vacío)
-      - ./replica/scripts/replica-entrypoint.sh:/usr/local/bin/replica-entrypoint.sh:ro
-    entrypoint: ["/bin/bash", "-lc", "/usr/local/bin/replica-entrypoint.sh"]
+      - ./replica/conf/replica-entrypoint.sh:/usr/local/bin/replica-entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/usr/local/bin/replica-entrypoint.sh"]
     networks:
       - pgnet
 
