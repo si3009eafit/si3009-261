@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  pg-leader:
+    image: postgres:17
+    container_name: pg-leader
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: labdb
+    ports:
+      - "5432:5432"
+    volumes:
+      # Datos persistentes del leader
+      - pg_leader_data:/var/lib/postgresql/data
+
+      # Configs del leader
+      - ./leader/conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./leader/conf/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+
+      # Init scripts: se ejecutan SOLO la primera vez que se crea el volumen
+      - ./leader/init:/docker-entrypoint-initdb.d:ro
+    command: >
+      postgres
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c hba_file=/etc/postgresql/pg_hba.conf
+    networks:
+      - pgnet
+
+networks:
+  pgnet:
+
+volumes:
+  pg_leader_data:
