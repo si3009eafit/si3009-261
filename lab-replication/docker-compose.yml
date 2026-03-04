@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   pg-leader:
-    image: postgres:18
+    image: postgres:17
     container_name: pg-leader
     environment:
       POSTGRES_USER: postgres
@@ -28,7 +28,7 @@ services:
       - pgnet
 
   pg-replica:
-    image: postgres:18
+    image: postgres:17
     container_name: pg-replica
     environment:
       POSTGRES_USER: postgres
@@ -51,7 +51,7 @@ services:
 
       # Script de arranque (hace basebackup si el data dir está vacío)
       - ./replica/scripts/replica-entrypoint.sh:/usr/local/bin/replica-entrypoint.sh:ro
-    entrypoint: ["/bin/bash", "/usr/local/bin/replica-entrypoint.sh"]
+    entrypoint: ["/bin/bash", "-lc", "/usr/local/bin/replica-entrypoint.sh"]
     networks:
       - pgnet
 
