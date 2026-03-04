@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  pg-leader:
+    image: postgres:18
+    container_name: pg-leader
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: labdb
+    ports:
+      - "5432:5432"
+    volumes:
+      # Datos persistentes del leader
+      - pg_leader_data:/var/lib/postgresql/data
+
+      # Configs del leader
+      - ./leader/conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./leader/conf/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+
+      # Init scripts: se ejecutan SOLO la primera vez que se crea el volumen
+      - ./leader/init:/docker-entrypoint-initdb.d:ro
+    command: >
+      postgres
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c hba_file=/etc/postgresql/pg_hba.conf
+    networks:
+      - pgnet
+
+  pg-replica:
+    image: postgres:18
+    container_name: pg-replica
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      # Variables para el script de réplica
+      REPLICA_HOST: pg-leader
+      REPLICA_PORT: "5432"
+      REPLICA_USER: replicator
+      REPLICA_PASSWORD: replica_pass
+    depends_on:
+      - pg-leader
+    ports:
+      - "5433:5432"
+    volumes:
+      # Datos persistentes del replica
+      - pg_replica_data:/var/lib/postgresql/data
+
+      # Config del replica
+      - ./replica/conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+
+      # Script de arranque (hace basebackup si el data dir está vacío)
+      - ./replica/scripts/replica-entrypoint.sh:/usr/local/bin/replica-entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/usr/local/bin/replica-entrypoint.sh"]
+    networks:
+      - pgnet
+
+networks:
+  pgnet:
+
+volumes:
+  pg_leader_data:
+  pg_replica_data:
