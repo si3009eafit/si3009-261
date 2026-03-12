@@ -19,28 +19,28 @@ CREATE USER MAPPING IF NOT EXISTS FOR admin
   SERVER barcelona_srv
   OPTIONS (user 'admin', password 'admin');
 
-DROP TABLE IF EXISTS empleados_dist CASCADE;
+DROP TABLE IF EXISTS empleados CASCADE;
 
-CREATE TABLE empleados_dist (
-  id      BIGINT NOT NULL,
+CREATE TABLE empleados (
+  id      BIGINT NOT NULL PRIMARY KEY,
   nombre  TEXT NOT NULL,
   ciudad  TEXT NOT NULL,
   salario NUMERIC(10,2) NOT NULL CHECK (salario >= 0),
-  PRIMARY KEY (ciudad, id)     -- clave distribuida simple
+  -- PRIMARY KEY (ciudad, id)     -- clave distribuida simple
 ) PARTITION BY LIST (ciudad);
 
-CREATE FOREIGN TABLE empleados_madrid_p
-  PARTITION OF empleados_dist FOR VALUES IN ('Madrid')
+CREATE FOREIGN TABLE empleados_madrid
+  PARTITION OF empleados FOR VALUES IN ('Madrid')
   SERVER madrid_srv
   OPTIONS (schema_name 'public', table_name 'empleados');
 
-CREATE FOREIGN TABLE empleados_barcelona_p
-  PARTITION OF empleados_dist FOR VALUES IN ('Barcelona')
+CREATE FOREIGN TABLE empleados_barcelona
+  PARTITION OF empleados FOR VALUES IN ('Barcelona')
   SERVER barcelona_srv
   OPTIONS (schema_name 'public', table_name 'empleados');
 
 
-SELECT * FROM empleados_dist ORDER BY ciudad, id;
+SELECT * FROM empleados ORDER BY ciudad, id;
 
 EXPLAIN (COSTS OFF)
-SELECT * FROM empleados_dist WHERE ciudad='Madrid';
+SELECT * FROM empleados WHERE ciudad='Madrid';

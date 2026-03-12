@@ -13,7 +13,7 @@
 * Docker + docker-compose.yml de postgresql 18+
 * cliente pgadmin
 
-## [docker-compose.yml](docker-compose.yml)
+## [docker-compose.yml](../docker-compose.yml)
 
 ## DDL+datos para creación de tablas en Madrid
 
@@ -28,8 +28,8 @@
 * postgres_fdw
 * servers madrid_srv, barcelona_srv
 * user mapping
-* tabla particionada empleados_dist
-* foreign partitions empleados_madrid_p, empleados_barcelona_p
+* tabla particionada empleados
+* foreign partitions empleados_madrid, empleados_barcelona
 
 [coordinador.sql](coordinador.sql)
 
